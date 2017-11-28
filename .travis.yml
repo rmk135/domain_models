@@ -1,21 +1,34 @@
 sudo: false
-language: python
-install: pip install tox
-script: tox
-python:
-  - 3.5
-env:
-  - TOXENV=coveralls
-  - TOXENV=pylint
-  - TOXENV=flake8
-  - TOXENV=pydocstyle
-  - TOXENV=py26
-  - TOXENV=py27
-  - TOXENV=py33
-  - TOXENV=py34
-  - TOXENV=py35
-  - TOXENV=pypy
-  - TOXENV=pypy3
+install:
+    - pip install tox
+script:
+    - tox
+language:
+    - python
+matrix:
+  include:
+    - python: 2.7
+      env: TOXENV=coveralls
+    - python: 2.7
+      env: TOXENV=pylint
+    - python: 2.7
+      env: TOXENV=flake8
+    - python: 2.7
+      env: TOXENV=pydocstyle
+    - python: 2.6
+      env: TOXENV=py26
+    - python: 2.7
+      env: TOXENV=py27
+    - python: 3.3
+      env: TOXENV=py33
+    - python: 3.4
+      env: TOXENV=py34
+    - python: 3.5
+      env: TOXENV=py35
+    - python: 3.6
+      env: TOXENV=py36
+    - python: pypy
+      env: TOXENV=pypy
 notifications:
   slack:
     secure: QHOypFu1TxCmkbCeNSqY39Bdj+hxOnA7H0zpTZrxDouLFdD+Ah5cKHFOFjFULruCdRo+JI8vPN0fmgRviUcyFVjKbs/3sEEUNU//JJpBPDQB9Epdc8jVp1w1GDF4fN/ujg3XW19U6N1dORRQBFi5EuJn/seYErogIs6F/4G8nEstyTLWqZ7DgnVBMM5aUVuwDae+iUNTutWTvVwJVqS84JC2rFzsRmXc9RJou6/PljBGogE5t+RYHWWAzSodwf3fMIdC7nKk+U6p5IwaDd021vgqk6Dduhu5qum89KsV80hP97qTIiJO/bz5gX6S/DG4cjjXFo2ELZARcRdQ2G7PJBooomiMPW3OTm4uTIbjxDKSIlZm/miHjUVv/+Am5TYgYPnOqU9RlYxAGFbKmkOXDwgJK3nyK8s4hK19cGss3hbRPC7VWRXAaGmO6Yk+UH7wUAbAPSzXvLT/GXc8VlY276KIFVoBX0dLlqSLt/jHrVvKZL1djXKIEa1cDUA9rDqybn+/Oue0QF9ask34lNM2Uu/5IdMAUz8V/U7UHtlfoYFMOJIbgzjUHRLAcIx9+k908rHAOzkMnPns9rDHkJFgJaj3n6Q5HJpQUMwq89Lhb1NHry0nNRE5awtXio6cRcri/ApVxFA+juuyRS64y1Adi8Su/ENAw4CkVeURJuMOqPk=

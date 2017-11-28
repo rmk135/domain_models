@@ -16,6 +16,9 @@ class Field(property):
         self.name = None
         self.storage_name = None
 
+        self.setter_fn = None
+        self.getter_fn = None
+
         self.model_cls = None
 
         self.default = default
@@ -60,7 +63,11 @@ class Field(property):
         if default is not None:
             default = self._converter(default)
 
-        value = getattr(model, self.storage_name)
+        if callable(self.getter_fn):
+            value = self.getter_fn(model)
+        else:
+            value = getattr(model, self.storage_name)
+
         return value if value is not None else default
 
     def set_value(self, model, value):
@@ -75,7 +82,10 @@ class Field(property):
         if value is not None:
             value = self._converter(value)
 
-        setattr(model, self.storage_name, value)
+        if callable(self.setter_fn) and value is not None:
+            self.setter_fn(model, value)
+        else:
+            setattr(model, self.storage_name, value)
 
     def get_builtin_type(self, model):
         """Return built-in type representation of Field.
@@ -84,6 +94,14 @@ class Field(property):
         :rtype object:
         """
         return self.get_value(model)
+
+    def getter(self, fn):
+        """Set function for implementation custom getter feature."""
+        self.getter_fn = fn
+
+    def setter(self, fn):
+        """Set function for implementation custom setter feature."""
+        self.setter_fn = fn
 
     def _converter(self, value):
         """Convert raw input value of the field.

@@ -4,8 +4,6 @@ import datetime
 
 import unittest2 as unittest
 
-import six
-
 from domain_models import models
 from domain_models import fields
 from domain_models import collections

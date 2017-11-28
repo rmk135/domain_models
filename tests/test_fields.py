@@ -44,6 +44,19 @@ class RequiredFieldModel(models.DomainModel):
     field_required = fields.Field(required=True)
 
 
+class CustomGetterSetter(models.DomainModel):
+    open_id = fields.Int()
+    id = fields.Int()
+
+    @open_id.getter
+    def _get_oid(self):
+        return self.id << 8
+
+    @open_id.setter
+    def _set_oid(self, value):
+        self.id = value >> 8
+
+
 class FieldTest(unittest.TestCase):
     """Base field tests."""
 
@@ -454,3 +467,27 @@ class CollectionTest(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             model.collection_field = [some_object]
+
+
+class CustomGetterSetterTest(unittest.TestCase):
+    """Test cases for custom getters and setters feature."""
+
+    def test_getter(self):
+        test_model = CustomGetterSetter()
+        test_model.id = 1
+        self.assertEqual(test_model.id, 1)
+        self.assertEqual(test_model.open_id, 256)
+
+        test_model = CustomGetterSetter(id=1)
+        self.assertEqual(test_model.id, 1)
+        self.assertEqual(test_model.open_id, 256)
+
+    def test_setter(self):
+        test_model = CustomGetterSetter()
+        test_model.open_id = 256
+        self.assertEqual(test_model.id, 1)
+        self.assertEqual(test_model.open_id, 256)
+
+        test_model = CustomGetterSetter(open_id=256)
+        self.assertEqual(test_model.id, 1)
+        self.assertEqual(test_model.open_id, 256)
